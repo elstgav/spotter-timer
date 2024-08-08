@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    // Specify the base directory to resolve non-relative module names
+    // e.g. `import { foo } from 'bar'` will resolve to `src/bar`.
+    "baseUrl": "src",
+
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -7,7 +11,7 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -16,9 +20,11 @@
 
     /* Linting */
     "strict": true,
+    "strictNullChecks": true,
+
+    "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedParameters": true
   },
   "include": ["./src"],
   "exclude": ["./src/**/*.test.*"] // Handled by tsconfig.test.json
