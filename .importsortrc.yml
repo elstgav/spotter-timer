@@ -1,0 +1,7 @@
+# Auto sort `import` statements
+#
+# See https://github.com/renke/import-sort
+
+'.js, .jsx, .es6, .es, .cjs, .mjs, .ts, .cts, .mts, .tsx':
+  parser: typescript
+  style: assurance
