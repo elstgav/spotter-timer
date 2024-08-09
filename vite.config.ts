@@ -3,6 +3,10 @@ import { defineConfig } from 'vite'
 import sassDts from 'vite-plugin-sass-dts'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
+import path from 'node:path'
+
+const srcDir = path.resolve(__dirname, 'src') // => src/
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -14,5 +18,8 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCaseOnly',
     },
+  },
+  resolve: {
+    alias: [{ find: '$src', replacement: srcDir }],
   },
 })
