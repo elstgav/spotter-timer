@@ -1,0 +1,57 @@
+@use 'sass:color';
+
+// Typography
+// -----------------------------------------------------------------------------
+
+$font-family:
+  Inter Variable,
+  system-ui,
+  Avenir,
+  Helvetica,
+  Arial,
+  sans-serif;
+
+$font-size-base: 16px;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+
+$h1-font-size: 1.5em;
+$h2-font-size: 1em;
+
+$h1-font-weight: $font-weight-medium;
+$h2-font-weight: $font-weight-medium;
+
+// Shapes
+// -----------------------------------------------------------------------------
+
+$border-radius: $font-size-base * 0.75;
+
+// Colors
+// -----------------------------------------------------------------------------
+
+$surface-color: hsl(198deg 19% 40%);
+$surface-color-darker: color.adjust($surface-color, $hue: 1deg, $saturation: -1%, $lightness: -14%);
+$surface-color-darkest: color.adjust($surface-color, $hue: 3deg, $lightness: -21%);
+
+// Exports
+// -----------------------------------------------------------------------------
+// Export tokens for use in JS
+
+:export {
+  fontFamily: $font-family;
+  fontSizeBase: $font-size-base;
+  fontWeightNormal: $font-weight-normal;
+  fontWeightMedium: $font-weight-medium;
+
+  h1FontSize: $h1-font-size;
+  h2FontSize: $h2-font-size;
+  h1FontWeight: $h1-font-weight;
+  h2FontWeight: $h2-font-weight;
+
+  borderRadius: $border-radius;
+
+  surfaceColor: $surface-color;
+  surfaceColorDarker: $surface-color-darker;
+  surfaceColorDarkest: $surface-color-darkest;
+}

@@ -1,24 +1,45 @@
 import { createTheme } from '@mui/material/styles'
 
 import '@fontsource-variable/inter' // Adds font stylesheets
+import tokens from './design-tokens.module.scss'
+
+const stripUnit = (str: unknown) => Number.parseInt(str as string, 10)
 
 export const theme = createTheme({
   palette: {
     mode: 'dark',
     background: {
-      default: '#273239',
-      paper: '#546F7A',
+      default: tokens.surfaceColorDarkest,
+      paper: tokens.surfaceColor,
     },
   },
+  shape: {
+    borderRadius: stripUnit(tokens.borderRadius),
+  },
   typography: {
-    // prettier-ignore
-    fontFamily: [
-      'Inter',
-      'system-ui',
-      'Avenir',
-      'Helvetica',
-      'Arial',
-      'sans-serif',
-    ].join(','),
+    fontFamily: tokens.fontFamily,
+    fontSize: stripUnit(tokens.fontSizeBase),
+
+    fontWeightRegular: tokens.fontWeightNormal,
+    fontWeightMedium: tokens.fontWeightMedium,
+
+    h1: {
+      fontSize: tokens.h1FontSize,
+      fontWeight: tokens.h1FontWeight,
+    },
+    h2: {
+      fontSize: tokens.h2FontSize,
+      fontWeight: tokens.h2FontWeight,
+    },
+  },
+
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.1em',
+        },
+      },
+    },
   },
 })
