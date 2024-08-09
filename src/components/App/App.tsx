@@ -1,5 +1,5 @@
-import './App.css'
+import { ThemeWrapper } from 'styles/ThemeWrapper'
 
 export const App = () => {
-  return <>Hello world</>
+  return <ThemeWrapper>Hello World</ThemeWrapper>
 }
