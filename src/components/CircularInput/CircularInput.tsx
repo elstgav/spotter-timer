@@ -33,6 +33,7 @@ export const CircularInput = ({ className, displayValue, ...props }: CircularInp
         aria-valuenow={props.value * 100}
         aria-valuemin={props['aria-valuemin'] ?? 0}
         aria-valuemax={props['aria-valuemax'] ?? 100}
+        aria-orientation="vertical" // up/down = increase/decrease value
       >
         <CircularTrack className={styles.track} {...trackDefaults} />
         <CircularProgress className={styles.progress} {...trackDefaults} />
