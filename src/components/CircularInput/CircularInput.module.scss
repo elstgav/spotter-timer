@@ -1,0 +1,50 @@
+@use '$src/styles/design-tokens.module' as tokens;
+
+// $input-size:     8em;
+
+$track-color: tokens.$surface-color-darkest;
+$track-width: 0.5em;
+
+$progress-color: white;
+$progress-width: $track-width;
+
+$thumb-color: white;
+$thumb-size: 'See CircularThumb `r` attribute; can’t adjust with CSS';
+$thumb-shadow: 0 0 5px color-mix(in srgb, black 10%, transparent);
+
+.wrapper {
+  display: grid;
+  grid-template: whole-grid;
+}
+
+.svg:focus {
+  filter: drop-shadow(0 0 4px tokens.$focus-ring-color);
+}
+
+.svg,
+.displayValue {
+  grid-area: whole-grid;
+  align-self: center;
+  justify-self: center;
+}
+
+.displayValue {
+  font-size: tokens.$font-size-larger;
+}
+
+.track {
+  stroke: $track-color;
+  stroke-width: $track-width;
+}
+
+.progress {
+  stroke: $progress-color;
+  stroke-width: $progress-width;
+}
+
+.thumb {
+  position: relative;
+  cursor: pointer;
+  filter: drop-shadow($thumb-shadow);
+  fill: $thumb-color;
+}
