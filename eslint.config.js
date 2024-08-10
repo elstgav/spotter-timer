@@ -8,11 +8,7 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.strict, ...tseslint.configs.stylistic],
 
     files: ['**/*.{ts,tsx}'],
     ignores: ['dist'],
@@ -42,12 +38,7 @@ export default tseslint.config(
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
 
-      '@typescript-eslint/no-confusing-void-expression': [
-        'error',
-        {
-          ignoreArrowShorthand: true,
-        },
-      ],
+      '@typescript-eslint/no-confusing-void-expression': ['off'],
 
       'react-refresh/only-export-components': [
         'warn',
