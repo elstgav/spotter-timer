@@ -30,5 +30,5 @@
     "noUnusedParameters": true
   },
   "include": ["./src"],
-  "exclude": ["./src/**/*.test.*"] // Handled by tsconfig.test.json
+  "exclude": ["./src/**/*.test.*", "./src/tests"] // Handled by tsconfig.test.json
 }
