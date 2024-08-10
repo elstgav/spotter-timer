@@ -107,10 +107,10 @@ export const useTimer = ({ duration: initialDuration = ONE_MINUTE }: TimerHookOp
   useEffect(() => {
     if (!state.isRunning) return
 
-    const timer = setInterval(() => dispatch({ type: 'TICK' }), ONE_SECOND)
+    const interval = setInterval(() => dispatch({ type: 'TICK' }), ONE_SECOND)
 
-    return () => clearTimeout(timer)
-  }, [state])
+    return () => clearInterval(interval)
+  }, [state.isRunning])
 
   return {
     ...state,
