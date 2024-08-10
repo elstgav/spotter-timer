@@ -1,4 +1,15 @@
-@use 'sass:color';
+@use 'sass:color' as color;
+
+// Colors
+// -----------------------------------------------------------------------------
+
+$surface-color:         #546f7a;
+$surface-color-darker:  color.adjust($surface-color, $hue: 1deg, $saturation: -1%, $lightness: -14%);
+$surface-color-darkest: color.adjust($surface-color, $hue: 3deg, $lightness: -21%);
+
+$focus-ring-color:      dodgerBlue;
+
+$text-color:            #FFF;
 
 // Typography
 // -----------------------------------------------------------------------------
@@ -11,47 +22,52 @@ $font-family:
   Arial,
   sans-serif;
 
-$font-size-base: 16px;
+$font-size-base:      18px;
+$font-size-large:     1.1em;
+$font-size-larger:    1.2em;
 
-$font-weight-normal: 400;
-$font-weight-medium: 500;
+$font-weight-regular: 400;
+$font-weight-medium:  500;
 
-$h1-font-size: 1.5em;
-$h2-font-size: 1em;
-
-$h1-font-weight: $font-weight-medium;
-$h2-font-weight: $font-weight-medium;
+$h1-font-size:        $font-size-larger;
+$h2-font-size:        $font-size-base;
+$h1-font-weight:      $font-weight-medium;
+$h2-font-weight:      $font-weight-medium;
 
 // Shapes
 // -----------------------------------------------------------------------------
 
-$border-radius: $font-size-base * 0.75;
+$border-radius: $font-size-base * 0.5;
 
-// Colors
+// Buttons
 // -----------------------------------------------------------------------------
 
-$surface-color: hsl(198deg 19% 40%);
-$surface-color-darker: color.adjust($surface-color, $hue: 1deg, $saturation: -1%, $lightness: -14%);
-$surface-color-darkest: color.adjust($surface-color, $hue: 3deg, $lightness: -21%);
+$icon-button-text-color: color.change($text-color, $alpha: 0.75);
 
 // Exports
 // -----------------------------------------------------------------------------
 // Export tokens for use in JS
 
 :export {
-  fontFamily: $font-family;
-  fontSizeBase: $font-size-base;
-  fontWeightNormal: $font-weight-normal;
-  fontWeightMedium: $font-weight-medium;
-
-  h1FontSize: $h1-font-size;
-  h2FontSize: $h2-font-size;
-  h1FontWeight: $h1-font-weight;
-  h2FontWeight: $h2-font-weight;
-
-  borderRadius: $border-radius;
-
-  surfaceColor: $surface-color;
-  surfaceColorDarker: $surface-color-darker;
+  surfaceColor:        $surface-color;
+  surfaceColorDarker:  $surface-color-darker;
   surfaceColorDarkest: $surface-color-darkest;
+
+  focusRingColor:      $focus-ring-color;
+
+  textColor:           $text-color;
+
+  fontFamily:          $font-family;
+  fontSizeBase:        $font-size-base;
+  fontWeightRegular:   $font-weight-regular;
+  fontWeightMedium:    $font-weight-medium;
+
+  h1FontSize:          $h1-font-size;
+  h2FontSize:          $h2-font-size;
+  h1FontWeight:        $h1-font-weight;
+  h2FontWeight:        $h2-font-weight;
+
+  borderRadius:        $border-radius;
+
+  iconButtonTextColor: $icon-button-text-color;
 }

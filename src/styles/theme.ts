@@ -8,9 +8,20 @@ const stripUnit = (str: unknown) => Number.parseInt(str as string, 10)
 export const theme = createTheme({
   palette: {
     mode: 'dark',
+    text: {
+      primary: tokens.textColor,
+    },
     background: {
       default: tokens.surfaceColorDarkest,
       paper: tokens.surfaceColor,
+    },
+
+    primary: {
+      main: tokens.surfaceColorDarkest,
+    },
+
+    secondary: {
+      main: tokens.textColor,
     },
   },
   shape: {
@@ -20,7 +31,7 @@ export const theme = createTheme({
     fontFamily: tokens.fontFamily,
     fontSize: stripUnit(tokens.fontSizeBase),
 
-    fontWeightRegular: tokens.fontWeightNormal,
+    fontWeightRegular: tokens.fontWeightRegular,
     fontWeightMedium: tokens.fontWeightMedium,
 
     h1: {
@@ -34,6 +45,25 @@ export const theme = createTheme({
   },
 
   components: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
+      styleOverrides: {
+        root: {
+          fontWeight: tokens.fontWeightRegular,
+          textTransform: 'initial',
+        },
+      },
+    },
+
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: tokens.iconButtonTextColor,
+        },
+      },
+    },
     MuiSvgIcon: {
       styleOverrides: {
         root: {
