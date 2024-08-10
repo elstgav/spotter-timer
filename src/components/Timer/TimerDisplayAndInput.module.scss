@@ -1,0 +1,54 @@
+@use '$src/styles/design-tokens.module' as tokens;
+@use '$src/styles/animations.module' as animations;
+
+.remainingTimeInput {
+  grid-area: --input;
+  margin-block: 3em;
+}
+
+.timerDisplayAndInput {
+  display: grid;
+  grid-template: '--whole-grid';
+  align-items: center;
+  justify-items: center;
+}
+
+.showDurationInputButton,
+.durationForm,
+.timerValue {
+  grid-area: --whole-grid;
+}
+
+.showDurationInputButton {
+  opacity: 0;
+
+  // backdrop-filter: blur(5px);
+  transition: opacity 200ms ease-in-out;
+
+  &:focus,
+  &:hover {
+    opacity: 1;
+    transition-duration: 400ms;
+  }
+}
+
+.durationInput,
+.timerValue {
+  font-size: tokens.$font-size-larger;
+}
+
+.durationInput input {
+  text-align: center;
+}
+
+.timerValue {
+  font-size: tokens.$font-size-larger;
+
+  &.timerDone {
+    @include animations.tada;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: tada 0.75s;
+    }
+  }
+}
