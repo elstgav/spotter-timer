@@ -8,3 +8,6 @@ build
 coverage
 dist
 docs
+
+# Useful to align repetitive values
+design-tokens.module.scss
