@@ -14,7 +14,7 @@ describe('useTimer', () => {
     expect(result.current.remainingTime).toBe(ONE_MINUTE)
   })
 
-  it('returns the correct state when played, paused, and resumed', async () => {
+  it('returns the correct state as the timer advances to and reaches zero', async () => {
     const { result } = renderHook(() => useTimer())
 
     expect(result.current).toMatchObject({
@@ -24,7 +24,7 @@ describe('useTimer', () => {
       isDone: false,
     })
 
-    act(() => result.current.setIsRunning(true))
+    act(() => result.current.dispatch({ type: 'PLAY' }))
 
     expect(result.current).toMatchObject({
       duration: ONE_MINUTE,

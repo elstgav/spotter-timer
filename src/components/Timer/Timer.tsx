@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Button, Card, CardContent, IconButton, Typography } from '@mui/material'
 import { useId } from 'react'
 import styles from './Timer.module.scss'
-import { TimerDisplayAndInput, TimerInputProps } from './TimerDisplayAndInput'
+import { TimerDisplayAndInput } from './TimerDisplayAndInput'
 
 export interface TimerProps {
   /** @default 'Timer' */
@@ -15,36 +15,19 @@ export interface TimerProps {
 
 export const Timer = ({ onClose, title = 'Timer' }: TimerProps) => {
   const titleId = useId()
-  const {
-    duration,
-    setDuration,
-    isRunning,
-    setIsRunning,
-    isDone,
-    remainingTime,
-    setRemainingTime,
-    addTime,
-    resetTimer,
-  } = useTimer()
+  const timer = useTimer()
 
   const onCloseClick = () => onClose?.()
 
-  const onDurationChangeStart = () => {
-    setIsRunning(false)
-  }
+  const onAddMinuteClick = () =>
+    timer.dispatch({
+      type: 'CHANGE',
+      duration: timer.duration + ONE_MINUTE,
+      remainingTime: timer.remainingTime + ONE_MINUTE,
+    })
 
-  const onDurationChange: TimerInputProps['onDurationChange'] = (newDuration) => {
-    setDuration(newDuration)
-    setRemainingTime(newDuration)
-  }
-
-  const onRemainingTimeChange: TimerInputProps['onRemainingTimeChange'] = (newRemainingTime) => {
-    setRemainingTime(newRemainingTime)
-  }
-
-  const onAddMinuteClick = () => addTime(ONE_MINUTE)
-  const onPlayPauseClick = () => setIsRunning((prevState) => !prevState)
-  const onResetClick = resetTimer
+  const onPlayPauseClick = () => timer.dispatch({ type: !timer.isRunning ? 'PLAY' : 'PAUSE' })
+  const onResetClick = () => timer.dispatch({ type: 'RESET' })
 
   return (
     <Card component="section" className={styles.timerCard} aria-labelledby={titleId}>
@@ -65,13 +48,8 @@ export const Timer = ({ onClose, title = 'Timer' }: TimerProps) => {
       <CardContent className={styles.body}>
         <TimerDisplayAndInput
           className={styles.timerInput}
-          duration={duration}
-          isDone={isDone}
-          remainingTime={remainingTime}
           aria-labelledby={titleId}
-          onDurationChangeStart={onDurationChangeStart}
-          onDurationChange={onDurationChange}
-          onRemainingTimeChange={onRemainingTimeChange}
+          timer={timer}
         />
 
         <Button
@@ -86,10 +64,10 @@ export const Timer = ({ onClose, title = 'Timer' }: TimerProps) => {
         <Button
           variant="contained"
           className={styles.playPauseButton}
-          aria-label={isRunning ? 'Pause' : 'Play'}
+          aria-label={timer.isRunning ? 'Pause' : 'Play'}
           onClick={onPlayPauseClick}
         >
-          {isRunning ? <Pause /> : <PlayArrow />}
+          {timer.isRunning ? <Pause /> : <PlayArrow />}
         </Button>
 
         <Button

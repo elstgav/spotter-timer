@@ -1,5 +1,5 @@
 import { CircularInput } from '$src/components/CircularInput'
-import { TimerHookValues } from '$src/hooks/useTimer'
+import { useTimer } from '$src/hooks/useTimer'
 import { msToDurationString } from '$src/lib/string-helpers'
 import { Box, Button, InputBase, Typography } from '@mui/material'
 import clsx from 'clsx'
@@ -16,40 +16,24 @@ import styles from './TimerDisplayAndInput.module.scss'
 import { durationStringToMilliseconds } from '$src/lib/datetime-helpers'
 import InputMask from 'react-input-mask'
 
-export interface TimerInputProps
-  extends Pick<TimerHookValues, 'duration' | 'remainingTime' | 'isDone'>,
-    AriaAttributes {
+export interface TimerInputProps extends AriaAttributes {
   className?: string
-  onRemainingTimeChange?: (value: number) => void
-  onDurationChangeStart?: () => void
-  onDurationChange?: (
-    /** new duration in milliseconds */
-    newDuration: number,
-  ) => void
+  timer: ReturnType<typeof useTimer>
 }
 
-export const TimerDisplayAndInput = ({
-  className,
-  duration,
-  remainingTime,
-  isDone,
-  onRemainingTimeChange,
-  onDurationChangeStart,
-  onDurationChange,
-  ...props
-}: TimerInputProps) => {
+export const TimerDisplayAndInput = ({ className, timer, ...props }: TimerInputProps) => {
   const durationRef = useRef<HTMLInputElement>(null)
   const [isEditingDuration, setIsEditingDuration] = useState(false)
 
-  const timeLeftString = msToDurationString(remainingTime)
+  const timeLeftString = msToDurationString(timer.remainingTime)
 
   const onCircularInputChange: ComponentProps<typeof CircularInput>['onChange'] = (percent) => {
-    onRemainingTimeChange?.(duration * percent)
+    timer.dispatch({ type: 'CHANGE', remainingTime: timer.duration * percent })
   }
 
-  const onShowDurationInputClick = () => {
+  const onShowDurationInput = () => {
     setIsEditingDuration(true)
-    onDurationChangeStart?.()
+    timer.dispatch({ type: 'PAUSE' })
   }
 
   const closeDurationInput = () => {
@@ -65,7 +49,11 @@ export const TimerDisplayAndInput = ({
 
   const onDurationInputSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
-    onDurationChange?.(durationStringToMilliseconds(durationRef.current?.value ?? ''))
+
+    const newDuration = durationStringToMilliseconds(durationRef.current?.value ?? '')
+
+    timer.dispatch({ type: 'CHANGE', duration: newDuration, remainingTime: newDuration })
+
     closeDurationInput()
   }
 
@@ -73,7 +61,7 @@ export const TimerDisplayAndInput = ({
     <CircularInput
       className={clsx(className, styles.remainingTimeInput)}
       onChange={onCircularInputChange}
-      value={remainingTime / duration}
+      value={timer.remainingTime / timer.duration}
       aria-label="Remaining Time"
       aria-valuetext={timeLeftString}
       displayValue={
@@ -105,16 +93,16 @@ export const TimerDisplayAndInput = ({
                 className={styles.showDurationInputButton}
                 variant="contained"
                 color="primary"
-                onClick={onShowDurationInputClick}
+                onClick={onShowDurationInput}
               >
                 Set Timer
               </Button>
               <Typography
-                className={clsx(styles.timerValue, isDone && styles.timerDone)}
+                className={clsx(styles.timerValue, timer.isDone && styles.timerDone)}
                 role="timer"
                 {...props}
               >
-                {isDone ? 'Done!' : timeLeftString}
+                {timer.isDone ? 'Done!' : timeLeftString}
               </Typography>
             </>
           )}

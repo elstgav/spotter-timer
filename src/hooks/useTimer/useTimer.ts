@@ -1,5 +1,5 @@
 import { ONE_MINUTE, ONE_SECOND } from '$src/lib/datetime-helpers'
-import { useCallback, useEffect, useState } from 'react'
+import { Dispatch, Reducer, useEffect, useReducer } from 'react'
 
 export interface TimerHookOptions {
   /** Timer duration, in milliseconds */
@@ -8,58 +8,112 @@ export interface TimerHookOptions {
 
 export type TimerHookValues = ReturnType<typeof useTimer>
 
-export const useTimer = ({ duration: defaultDuration = ONE_MINUTE }: TimerHookOptions = {}) => {
-  const [duration, setDuration] = useState(defaultDuration)
-  const [isRunning, setIsRunning] = useState(false)
-  const [isDone, setIsDone] = useState(false)
-  const [remainingTime, setRemainingTime] = useState(duration)
+export type TimerAction =
+  | {
+      type: 'PLAY'
+    }
+  | {
+      type: 'PAUSE'
+    }
+  | {
+      type: 'TICK'
+    }
+  | {
+      type: 'RESET'
+    }
+  | ({
+      type: 'CHANGE'
+    } & Partial<Pick<TimerState, 'duration' | 'remainingTime'>>)
 
-  const addTime = useCallback((milliseconds: number) => {
-    setDuration((prevDuration) => prevDuration + milliseconds)
-    setRemainingTime((prevRemaining) => prevRemaining + milliseconds)
-  }, [])
+export interface TimerState {
+  /**
+   * in milliseconds
+   *
+   * @default {@link ONE_MINUTE}
+   */
+  duration: number
 
-  const resetTimer = useCallback(() => {
-    setIsRunning(false)
-    setIsDone(false)
-    setRemainingTime(duration)
-  }, [duration])
+  /**
+   * in milliseconds
+   *
+   * @default matches `duration`
+   */
+  remainingTime: number
 
-  useEffect(() => {
-    if (!isRunning) return
+  /** @default false */
+  isRunning: boolean
 
-    const timer = setInterval(function onTick() {
-      setRemainingTime((prevTime) => prevTime - ONE_SECOND)
-    }, ONE_SECOND)
+  /** @default false */
+  isDone: boolean
+}
 
-    return () => clearTimeout(timer)
-  }, [isRunning])
+export type TimerDispatch = Dispatch<TimerAction>
 
-  useEffect(() => {
-    const remainingSeconds = Math.floor(remainingTime / ONE_SECOND)
+const reducer: Reducer<TimerState, TimerAction> = (state, { type, ...payload }) => {
+  switch (type) {
+    case 'PLAY':
+      return {
+        ...state,
+        isRunning: true,
+      }
+    case 'PAUSE':
+      return {
+        ...state,
+        isRunning: false,
+      }
 
-    if (remainingSeconds > 0) {
-      setIsDone(false)
-      return
+    case 'TICK': {
+      const remainingTime = Math.max(state.remainingTime - ONE_SECOND, 0)
+      const remainingSeconds = Math.floor(remainingTime / ONE_SECOND)
+
+      if (remainingSeconds <= 0)
+        // STOP
+        return {
+          ...state,
+          remainingTime: 0,
+          isRunning: false,
+          isDone: true,
+        }
+
+      return {
+        ...state,
+        remainingTime: Math.max(state.remainingTime - ONE_SECOND, 0),
+      }
     }
 
-    if (!isRunning) return
+    case 'RESET':
+      return {
+        ...state,
+        remainingTime: state.duration,
+        isRunning: false,
+        isDone: false,
+      }
+    case 'CHANGE':
+      return {
+        ...state,
+        ...payload,
+      }
+  }
+}
 
-    setIsRunning(false)
-    setIsDone(true)
-    setRemainingTime(0)
-  }, [isRunning, remainingTime])
+export const useTimer = ({ duration: initialDuration = ONE_MINUTE }: TimerHookOptions = {}) => {
+  const [state, dispatch] = useReducer(reducer, {
+    duration: initialDuration,
+    remainingTime: initialDuration,
+    isRunning: false,
+    isDone: false,
+  })
+
+  useEffect(() => {
+    if (!state.isRunning) return
+
+    const timer = setInterval(() => dispatch({ type: 'TICK' }), ONE_SECOND)
+
+    return () => clearTimeout(timer)
+  }, [state])
 
   return {
-    duration,
-    setDuration,
-    isRunning,
-    setIsRunning,
-    isDone,
-    remainingTime,
-    setRemainingTime,
-
-    addTime,
-    resetTimer,
+    ...state,
+    dispatch,
   } as const
 }
