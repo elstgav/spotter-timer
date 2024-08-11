@@ -8,6 +8,20 @@ import { Timer } from './Timer'
 mockTime.install()
 
 describe('Timer', () => {
+  beforeEach(() => {
+    // TODO: Solve React act complaints about setInterval
+    // HACK: Suppress act errors to reduce noise in test output
+    // @ts-expect-error this is a hack we should fix
+    global.IS_REACT_ACT_ENVIRONMENT = false
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.mocked(console.error).mockRestore?.()
+  })
+
   it('has a configurable title', () => {
     render(<Timer title="test countdown" />)
 
