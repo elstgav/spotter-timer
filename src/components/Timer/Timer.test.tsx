@@ -2,6 +2,7 @@ import { ONE_MINUTE, ONE_SECOND } from '$src/lib/datetime-helpers'
 import { mockTime } from '$src/tests/mocks/mock-time'
 import { user } from '$src/tests/mocks/mock-user-events'
 import { render, screen } from '@testing-library/react'
+import { act } from 'react'
 import { Timer } from './Timer'
 
 mockTime.install()
@@ -25,7 +26,7 @@ describe('Timer', () => {
 
     expect(screen.getByRole('timer')).toHaveTextContent('01:00')
 
-    await vi.advanceTimersByTime(ONE_MINUTE)
+    await act(() => vi.advanceTimersByTimeAsync(ONE_MINUTE))
 
     expect(screen.getByRole('timer')).toHaveTextContent('01:00')
   })
@@ -37,15 +38,16 @@ describe('Timer', () => {
       expect(screen.getByRole('timer')).toHaveTextContent('01:00')
 
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(ONE_SECOND)
+      expect(screen.getByRole('button', { name: /PAUSE/i })).toBeVisible()
 
+      act(() => vi.advanceTimersByTime(ONE_SECOND))
       expect(screen.getByRole('timer')).toHaveTextContent('00:59')
 
-      await vi.advanceTimersByTime(ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:58')
 
-      await vi.advanceTimersByTime(ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:57')
     })
@@ -54,11 +56,11 @@ describe('Timer', () => {
       render(<Timer />)
 
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:59')
 
-      await vi.advanceTimersByTime(2 * ONE_MINUTE)
+      await act(() => vi.advanceTimersByTimeAsync(2 * ONE_MINUTE))
 
       expect(screen.getByRole('timer')).toHaveTextContent(/done/i)
     })
@@ -72,19 +74,19 @@ describe('Timer', () => {
 
       // PLAY
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(16 * ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(16 * ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:44')
 
       // PAUSE
       await user.click(screen.getByRole('button', { name: /PAUSE/i }))
-      await vi.advanceTimersByTime(ONE_MINUTE)
+      await act(() => vi.advanceTimersByTimeAsync(ONE_MINUTE))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:44')
 
       // RESUME
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(14 * ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(14 * ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:30')
     })
@@ -97,7 +99,7 @@ describe('Timer', () => {
       expect(screen.getByRole('timer')).toHaveTextContent('01:00')
 
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(16 * ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(16 * ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:44')
 
@@ -119,7 +121,7 @@ describe('Timer', () => {
       expect(screen.getByRole('timer')).toHaveTextContent('01:00')
 
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(16 * ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(16 * ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:44')
       expect(screen.getByRole('button', { name: /PAUSE/i })).toBeVisible()
@@ -130,7 +132,7 @@ describe('Timer', () => {
       expect(screen.getByRole('button', { name: /PLAY/i })).toBeVisible()
 
       await user.click(screen.getByRole('button', { name: /PLAY/i }))
-      await vi.advanceTimersByTime(30 * ONE_SECOND)
+      await act(() => vi.advanceTimersByTimeAsync(30 * ONE_SECOND))
 
       expect(screen.getByRole('timer')).toHaveTextContent('00:30')
 
